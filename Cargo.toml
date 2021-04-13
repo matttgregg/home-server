@@ -1,0 +1,6 @@
+[workspace]
+
+members = [
+	'temperature-tools',
+  'get-home'
+    ]

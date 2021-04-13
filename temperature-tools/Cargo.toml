@@ -1,0 +1,15 @@
+[package]
+name = "temperature-tools"
+version = "0.1.0"
+authors = ["Matthew Gregg <matt.t.gregg@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+chrono = "0.4.19"
+dotenv = "0.15.0"
+dotenv_codegen = "0.15.0"
+rust_decimal = { version = "1.10.3", features = ["db-tokio-postgres"]}
+tokio = { version = "1.4.0", features = ["full"] }
+tokio-postgres = { version = "0.7.1", features = ["with-chrono-0_4"] }
