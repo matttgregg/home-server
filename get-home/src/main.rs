@@ -26,8 +26,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             let temps = temperature_tools::all_temps_json().await?;
             println!("{}", temps)
         },
-        _ => {
-            unimplemented!()
+        GetHome::Import{path} => {
+            temperature_tools::import_many(&path).await?;
+        },
+        GetHome::Clean => {
+            temperature_tools::clear_all().await?;
         }
     }
 
