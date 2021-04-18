@@ -1,13 +1,35 @@
 use chrono::{DateTime, Utc};
 use rust_decimal::{prelude::ToPrimitive, Decimal};
-use tokio_postgres::{Error, NoTls};
+use tokio_postgres::NoTls;
+use serde::{Serialize, Deserialize};
+use anyhow::Result;
+use thiserror::Error;
 
+#[derive(Serialize, Deserialize)]
 pub struct TimedTemp {
     pub timestamp: DateTime<Utc>,
     pub centigrade: f32,
 }
 
-pub async fn all_temps() -> Result<Vec<TimedTemp>, Error> {
+#[derive(Error, Debug)]
+pub enum TemperatureError {
+    #[error("General temperature error")]
+    TemperatureError,
+
+    #[error("Error during DB access")]
+    DatabaseError (#[from] tokio_postgres::Error)
+}
+
+fn temps_to_json(temps: &[TimedTemp]) -> serde_json::Result<String> {
+    serde_json::to_string(temps)
+}
+
+pub async fn all_temps_json() -> Result<String, TemperatureError> {
+    let all_temps = all_temps().await?;
+    temps_to_json(&all_temps).map_err(|_| TemperatureError::TemperatureError)
+}
+
+pub async fn all_temps() -> Result<Vec<TimedTemp>, TemperatureError> {
     dotenv::dotenv().ok();
     let usr = dotenv::var("HOME_USER");
 

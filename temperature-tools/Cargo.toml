@@ -7,9 +7,13 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-chrono = "0.4.19"
+anyhow = "1.0.40"
+chrono = { version = "0.4.19", features = ["serde"]}
 dotenv = "0.15.0"
 dotenv_codegen = "0.15.0"
 rust_decimal = { version = "1.10.3", features = ["db-tokio-postgres"]}
+serde = { version = "1.0.125", features = ["derive"]}
+serde_json = "1.0.64"
+thiserror = "1.0.24"
 tokio = { version = "1.4.0", features = ["full"] }
-tokio-postgres = { version = "0.7.1", features = ["with-chrono-0_4"] }
+tokio-postgres = { version = "0.7.1", features = ["with-chrono-0_4"]}

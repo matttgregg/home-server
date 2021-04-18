@@ -23,10 +23,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     match opt {
         GetHome::Export => {
-            let temps = temperature_tools::all_temps().await?;
-            for t in &temps {
-                println!("{} {} C", t.timestamp, t.centigrade);
-            }
+            let temps = temperature_tools::all_temps_json().await?;
+            println!("{}", temps)
         },
         _ => {
             unimplemented!()
