@@ -111,6 +111,26 @@ async fn query(query: &str) -> Result<Vec<tokio_postgres::Row>, TemperatureError
     client.query(query, &[]).await.map_err(|err| TemperatureError::DatabaseError(err))
 }
 
+pub async fn last_temp() -> Result<TimedTemp, TemperatureError> {
+    let rows = query("SELECT * FROM temperatures ORDER BY time DESC LIMIT 1").await?;
+
+    if let Some(latest) = rows.first() {
+        let temp: Decimal = latest.get(1);
+
+        if let Some(centigrade) = temp.to_f32() {
+            Ok(TimedTemp {
+                timestamp: latest.get(0),
+                centigrade,
+            })
+        } else {
+            Err(TemperatureError::IOError("could not parse temperature".to_string()))
+        }
+    } else {
+        Err(TemperatureError::IOError("no temperatures found".to_string()))
+    }
+
+}
+
 pub async fn all_temps() -> Result<Vec<TimedTemp>, TemperatureError> {
     let rows = query("SELECT * FROM temperatures").await?;
 

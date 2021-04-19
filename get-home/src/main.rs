@@ -5,6 +5,8 @@ use std::path::PathBuf;
 #[structopt(name = "get-home")]
 /// Utility for managing home data.
 enum GetHome {
+    /// Get the latest data available.
+    Latest,
     /// Remove all data from the system.
     Clean,
     /// Export all data from the system.
@@ -22,6 +24,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let opt = GetHome::from_args();
 
     match opt {
+        GetHome::Latest => {
+            let temp = temperature_tools::last_temp().await?;
+            println!("Latest Temperature: {} :: {}C", temp.timestamp, temp.centigrade);
+        },
         GetHome::Export => {
             let temps = temperature_tools::all_temps_json().await?;
             println!("{}", temps)
