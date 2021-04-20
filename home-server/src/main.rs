@@ -44,6 +44,10 @@ async fn temps_latest() -> impl Responder {
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    //let address = "localhost:80";
+    let address = "0.0.0.0:80";
+    println!("Serving on : {}", address);
+
     HttpServer::new(|| {
         App::new()
             .service(hello)
@@ -51,7 +55,7 @@ async fn main() -> std::io::Result<()> {
             .service(web::scope("/temperature").service(temps_latest).service(temps_index))
             .route("/hey", web::get().to(manual_hello))
     })
-        .bind("127.0.0.1:8080")?
+        .bind(address)?
         .run()
         .await
 }
