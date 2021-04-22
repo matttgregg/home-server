@@ -9,3 +9,5 @@ edition = "2018"
 [dependencies]
 temperature-tools = { path = "../temperature-tools" }
 actix-web = "4.0.0-beta"
+dotenv = "0.15.0"
+dotenv_codegen = "0.15.0"

@@ -723,6 +723,8 @@ name = "home-server"
 version = "0.1.0"
 dependencies = [
  "actix-web",
+ "dotenv",
+ "dotenv_codegen",
  "temperature-tools",
 ]
 

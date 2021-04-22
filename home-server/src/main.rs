@@ -44,8 +44,8 @@ async fn temps_latest() -> impl Responder {
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    //let address = "localhost:80";
-    let address = "0.0.0.0:80";
+    dotenv::dotenv().ok();
+    let address = dotenv::var("HOME_ADDRESS").unwrap_or("127.0.0.1:8080".to_string());
     println!("Serving on : {}", address);
 
     HttpServer::new(|| {
