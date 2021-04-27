@@ -1,4 +1,4 @@
-use chrono::{DateTime, Utc};
+use chrono::{DateTime, NaiveDate, Utc};
 use rust_decimal::{prelude::ToPrimitive, Decimal};
 use tokio_postgres::NoTls;
 use serde::{Serialize, Deserialize};
@@ -108,8 +108,14 @@ pub async fn last_temp() -> Result<TimedTemp, TemperatureError> {
 }
 
 pub async fn all_temps() -> Result<Vec<TimedTemp>, TemperatureError> {
+    let min_time = DateTime::<Utc>::from_utc(NaiveDate::from_ymd(1900, 1, 1).and_hms(0, 0, 0), Utc);
+    let max_time = DateTime::<Utc>::from_utc(NaiveDate::from_ymd(2950, 1, 1).and_hms(0, 0, 0), Utc);
+    return all_temps_between(&min_time, &max_time).await;
+}
+
+pub async fn all_temps_between(from: &DateTime<Utc>, to: &DateTime<Utc>) -> Result<Vec<TimedTemp>, TemperatureError> {
     let client = home_client().await?;
-    let rows = client.query("SELECT * FROM temperatures", &[]).await?;
+    let rows = client.query("SELECT * FROM temperatures WHERE temperatures.time BETWEEN $1 AND $2", &[from, to]).await?;
 
     let mut temps = vec![];
 
